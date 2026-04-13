@@ -1,0 +1,26 @@
+[project]
+name = "course-work-1"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Maxim",email = "mcsim55555k@gmail.com"}
+]
+requires-python = ">=3.14"
+dependencies = [
+    "pip (>=26.0.1,<27.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "course_work_1", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+lint = [
+    "flake8 (>=7.3.0,<8.0.0)",
+    "mypy (>=1.20.1,<2.0.0)",
+    "black (>=26.3.1,<27.0.0)",
+    "isort (>=8.0.1,<9.0.0)"
+]
