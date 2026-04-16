@@ -18,7 +18,7 @@ def main_page(date: str)-> dict:
     final_data["currency_rates"] = currency_rates('../user_settings.json', date)
     final_data["stock_prices"] = stock_information('../user_settings.json')
 
-    with open('../data/output.json', 'w', encoding='utf-8') as f:
+    with open('../data/json_outputs/main_output.json', 'w', encoding='utf-8') as f:
         json.dump(final_data, f, ensure_ascii=False, indent=4)
 
 
