@@ -7,8 +7,8 @@ import json
 from datetime import datetime
 
 
-date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-date_string = '20.05.2021'
+# date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+# date_string = '2021-05-25 12:12:12'
 
 
 def greetings(date_time: str) -> str:
@@ -18,13 +18,13 @@ def greetings(date_time: str) -> str:
     time_str = time_value[0]
 
     if int(time_str[:2]) < 5:
-        greeting = 'Доброй ночи!'
+        greeting = "Доброй ночи!"
     elif 5 <= int(time_str[:2]) < 11:
-        greeting = 'Доброе утро!'
+        greeting = "Доброе утро!"
     elif 11 <= int(time_str[:2]) < 18:
-        greeting = 'Добрый день!'
+        greeting = "Добрый день!"
     else:
-        greeting = 'Добрый вечер!'
+        greeting = "Добрый вечер!"
 
     return greeting
 
@@ -68,9 +68,9 @@ def cards_data(excel_file: list[dict], date_time: str) -> list[dict]:
     # day = target_date.day
     # month = target_date.month
     # year = target_date.year
-    day = date_time.split('.')[0]
-    month = date_time.split('.')[1]
-    year = date_time.split('.')[2]
+    year = date_time.split('-')[0]
+    month = date_time.split('-')[1]
+    day = date_time.split('-')[2][:2]
 
     categories_no_cashback = ('Бонусы', 'Госуслуги', 'Другое', 'Зарплата', 'Наличные', 'НКО', 'Переводы', 'Пополнения',
                               'Услуги банка', 'Финансы', '')
@@ -87,23 +87,23 @@ def cards_data(excel_file: list[dict], date_time: str) -> list[dict]:
             else:
                 cash_back = (float(operation['Сумма операции']) * (-1)) // 100
 
-            single_operation = {'last_digits': operation['Номер карты'][1:], 'total_spent': operation['Сумма операции'], 'cashback': cash_back}
+            single_operation = {"last_digits": operation['Номер карты'][1:], "total_spent": operation['Сумма операции'], "cashback": cash_back}
 
             cards_list.append(single_operation)
 
     return cards_list
 
 # date_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-# date_string = '20.05.2021'
+# date_string = '2026-04-16 01:11:11'
 # print(cards_data(data_from_excel('../data/operations.xlsx'), date_string))
 
 
 def sort_by_payment(excel_file: list[dict], date_time) -> list[dict]:
     """Функция определяет ТОП5 транзакций по сумме платежа"""
 
-    day = date_time.split('.')[0]
-    month = date_time.split('.')[1]
-    year = date_time.split('.')[2]
+    year = date_time.split('-')[0]
+    month = date_time.split('-')[1]
+    day = date_time.split('-')[2][:2]
 
     excel_file_selected = []
 
@@ -113,18 +113,18 @@ def sort_by_payment(excel_file: list[dict], date_time) -> list[dict]:
                 0 < int(operation['Дата операции'][:2]) <= int(day)):
             excel_file_selected.append(operation)
 
-    sorted_set = sorted(excel_file_selected, key=lambda x: x['Сумма платежа'], reverse=True)
+    sorted_set = sorted(excel_file_selected, key=lambda x: abs(x['Сумма платежа']), reverse=True)
     top5 = sorted_set[:5]
     top5_selected = []
     for operation in top5:
-        selection = {'date': operation['Дата платежа'], 'amount': operation['Сумма платежа'], 'category': operation['Категория'], 'description': operation['Описание']}
+        selection = {"date": operation['Дата платежа'], "amount": operation['Сумма платежа'], "category": operation['Категория'], "description": operation['Описание']}
         top5_selected.append(selection)
     return top5_selected
 
 # print(sort_by_payment(data_from_excel('../data/operations.xlsx'), date_string))
 
 
-def currency_rates(path_user_settings: str, date=date_string) -> list[dict]:
+def currency_rates(path_user_settings: str, date) -> list[dict]:
     """Функция получает курс валют на заданную дату"""
 
     with open(path_user_settings, "r", encoding="utf-8") as file:
@@ -142,7 +142,7 @@ def currency_rates(path_user_settings: str, date=date_string) -> list[dict]:
 
         response = requests.get(url, headers=headers, params=payload)
         result = response.json()["result"]
-        currency_rate = {'currency': item, 'rate': result}
+        currency_rate = {"currency": item, "rate": result}
         currency_rates_list.append(currency_rate)
 
     return currency_rates_list
@@ -169,7 +169,7 @@ def stock_information(path_user_settings: str) -> list[dict]:
 
         response = requests.get(url, headers=headers, params=payload)
         result = response.json()[0]["price"]
-        stock_data = {'stock': item, 'price': result}
+        stock_data = {"stock": item, "price": result}
         stock_prices_list.append(stock_data)
 
     return stock_prices_list

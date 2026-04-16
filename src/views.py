@@ -2,8 +2,39 @@ import json
 import re
 import datetime
 
+from utils import greetings, data_from_excel, cards_data, sort_by_payment, currency_rates, stock_information
 
-date_string = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+# date_string = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def main_page(date: str)-> dict:
+    """Функция принимает дату в формате YYYY-MM-DD HH:MM:SS и возвращает JSON файл после обработки входных данных во вспомогательных функциях"""
+
+    final_data = {}
+    final_data["greeting"] = greetings(date)
+    final_data["cards"] = cards_data(data_from_excel('../data/operations.xlsx'), date)
+    final_data["top_transactions"] = sort_by_payment(data_from_excel('../data/operations.xlsx'), date)
+    final_data["currency_rates"] = currency_rates('../user_settings.json', date)
+    final_data["stock_prices"] = stock_information('../user_settings.json')
+
+    with open('../data/output.json', 'w', encoding='utf-8') as f:
+        json.dump(final_data, f, ensure_ascii=False, indent=4)
+
+
+
+    return final_data
+
+
+
+print(main_page('2021-05-02 07:11:11'))
+
+
+
+
+
+
+
 
 
 # Топ-5 транзакций по сумме платежа.

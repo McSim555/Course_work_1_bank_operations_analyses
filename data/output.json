@@ -1,0 +1,129 @@
+{
+    "greeting": "Доброе утро!",
+    "cards": [
+        {
+            "last_digits": "4556",
+            "total_spent": -250.0,
+            "cashback": 2.0
+        },
+        {
+            "last_digits": "7197",
+            "total_spent": -172.0,
+            "cashback": 1.0
+        },
+        {
+            "last_digits": "7197",
+            "total_spent": -674.24,
+            "cashback": 6.0
+        },
+        {
+            "last_digits": "7197",
+            "total_spent": -105.73,
+            "cashback": 1.0
+        },
+        {
+            "last_digits": "7197",
+            "total_spent": -326.31,
+            "cashback": 3.0
+        },
+        {
+            "last_digits": "7197",
+            "total_spent": -128.0,
+            "cashback": 1.0
+        },
+        {
+            "last_digits": "7197",
+            "total_spent": -11.8,
+            "cashback": 0.0
+        },
+        {
+            "last_digits": "7197",
+            "total_spent": -64.0,
+            "cashback": 0.0
+        },
+        {
+            "last_digits": "4556",
+            "total_spent": -1675.8,
+            "cashback": 16.0
+        },
+        {
+            "last_digits": "7197",
+            "total_spent": -53.99,
+            "cashback": 0.0
+        },
+        {
+            "last_digits": "7197",
+            "total_spent": -149.97,
+            "cashback": 1.0
+        },
+        {
+            "last_digits": "7197",
+            "total_spent": -146.0,
+            "cashback": 1.0
+        }
+    ],
+    "top_transactions": [
+        {
+            "date": "01.05.2021",
+            "amount": -1675.8,
+            "category": "Ж/д билеты",
+            "description": "РЖД"
+        },
+        {
+            "date": "02.05.2021",
+            "amount": -674.24,
+            "category": "Супермаркеты",
+            "description": "Магнит"
+        },
+        {
+            "date": "01.05.2021",
+            "amount": -326.31,
+            "category": "Супермаркеты",
+            "description": "Магнит"
+        },
+        {
+            "date": "02.05.2021",
+            "amount": -250.0,
+            "category": "Связь",
+            "description": "МТС"
+        },
+        {
+            "date": "03.05.2021",
+            "amount": -172.0,
+            "category": "Транспорт",
+            "description": "Северо-Западная пригородная пассажирская компания"
+        }
+    ],
+    "currency_rates": [
+        {
+            "currency": "USD",
+            "rate": 76.550355
+        },
+        {
+            "currency": "EUR",
+            "rate": 90.234411
+        }
+    ],
+    "stock_prices": [
+        {
+            "stock": "AAPL",
+            "price": 266.43
+        },
+        {
+            "stock": "AMZN",
+            "price": 248.5
+        },
+        {
+            "stock": "GOOGL",
+            "price": 337.12
+        },
+        {
+            "stock": "MSFT",
+            "price": 411.22
+        },
+        {
+            "stock": "TSLA",
+            "price": 391.95
+        }
+    ]
+}
