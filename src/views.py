@@ -1,22 +1,51 @@
 import json
-import re
-import datetime
+import logging
 
 from utils import greetings, data_from_excel, cards_data, sort_by_payment, currency_rates, stock_information
 
 
-# date_string = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    filename='../logs/views.log',
+                    filemode='w',
+                    encoding='utf-8')
+
+main_logger = logging.getLogger('views')
 
 
 def main_page(date: str)-> dict:
     """Функция принимает дату в формате YYYY-MM-DD HH:MM:SS и возвращает JSON файл после обработки входных данных во вспомогательных функциях"""
 
     final_data = {}
-    final_data["greeting"] = greetings(date)
-    final_data["cards"] = cards_data(data_from_excel('../data/operations.xlsx'), date)
-    final_data["top_transactions"] = sort_by_payment(data_from_excel('../data/operations.xlsx'), date)
-    final_data["currency_rates"] = currency_rates('../user_settings.json', date)
-    final_data["stock_prices"] = stock_information('../user_settings.json')
+    try:
+        final_data["greeting"] = greetings(date)
+        main_logger.info(f'Сформировано приветствие: {final_data["greeting"]}')
+    except Exception as e:
+        main_logger.error('Функция greeting сработала с ошибкой')
+
+    try:
+        final_data["cards"] = cards_data(data_from_excel('../data/operations.xlsx'), date)
+        main_logger.info(f'Сформирован список транзакций. Пример формата вывода: {final_data["cards"][0]}')
+    except Exception as e:
+        main_logger.error('Функция cards_data сработала с ошибкой')
+
+    try:
+        final_data["top_transactions"] = sort_by_payment(data_from_excel('../data/operations.xlsx'), date)
+        main_logger.info(f'Сформирован список топ5 транзакций. Пример формата вывода: {final_data["top_transactions"][0]}')
+    except Exception as e:
+        main_logger.error('Функция sort_by_payment сработала с ошибкой')
+
+    try:
+        final_data["currency_rates"] = currency_rates('../user_settings.json', date)
+        main_logger.info(f'Получены курсы валют: {final_data["currency_rates"]}')
+    except Exception as e:
+        main_logger.error('Функция currency_rates сработала с ошибкой')
+
+    try:
+        final_data["stock_prices"] = stock_information('../user_settings.json')
+        main_logger.info(f'Получены биржевые данные. Пример: {final_data["stock_prices"][0]}')
+    except Exception as e:
+        main_logger.error('Функция stock_information сработала с ошибкой')
 
     with open('../data/json_outputs/main_output.json', 'w', encoding='utf-8') as f:
         json.dump(final_data, f, ensure_ascii=False, indent=4)
