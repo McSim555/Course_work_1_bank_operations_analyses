@@ -4,18 +4,16 @@ import os
 import requests
 from dotenv import load_dotenv
 import json
-from datetime import datetime
-
-
-# date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-# date_string = '2021-05-25 12:12:12'
 
 
 def greetings(date_time: str) -> str:
     """Функция для выбора приветствия """
 
-    time_value = re.findall(r'\d{2}:\d{2}:\d{2}', date_time)
-    time_str = time_value[0]
+    try:
+        time_value = re.findall(r'\d{2}:\d{2}:\d{2}', date_time)
+        time_str = time_value[0]
+    except Exception as e:
+        print('Время введено некорректно')
 
     if int(time_str[:2]) < 5:
         greeting = "Доброй ночи!"
@@ -30,33 +28,21 @@ def greetings(date_time: str) -> str:
 
 
 def data_from_excel(path_to_excel: str)-> list[dict]:
-    """Функция для считывания финансовых операций из Excel выдает список словарей с данными"""
+    """Функция для считывания финансовых операций из Excel выдает список словарей с данными
+    :rtype: list[dict]
+    """
 
     try:
         excel_data = pd.read_excel(path_to_excel)
+
         excel_data_filled = excel_data.fillna('')
-        # i = 0
-        # for transaction in excel_data["from"].notnull():
-        #     if transaction is False:
-        #         excel_data.loc[i, "from"] = ""
-        #     i += 1
-        #
-        # i = 0
-        # for transaction in excel_data["id"].notnull():
-        #     if transaction is False:
-        #         excel_data = excel_data.dropna(subset=["id"])
-        #     i += 1
 
         excel_transactions_list = excel_data_filled.to_dict(orient="records")
 
-        # excel_transactions_list_new = []
-        # for operation in excel_transactions_list:
-        #     operation["id"] = int(operation["id"])
-        #     excel_transactions_list_new.append(operation)
-
         return excel_transactions_list
 
-    except Exception:
+    except Exception as e:
+        print('Файл не найден или ошибка чтения файла')
         return []
 
 # print(data_from_excel('../data/operations.xlsx'))
@@ -64,10 +50,6 @@ def data_from_excel(path_to_excel: str)-> list[dict]:
 def cards_data(excel_file: list[dict], date_time: str) -> list[dict]:
     """Функция для подготовки данных по картам в заданном формате"""
 
-    # target_date = datetime.strptime(date_time, "%Y-%m-%d %H:%M:%S")
-    # day = target_date.day
-    # month = target_date.month
-    # year = target_date.year
     year = date_time.split('-')[0]
     month = date_time.split('-')[1]
     day = date_time.split('-')[2][:2]
@@ -154,25 +136,30 @@ def currency_rates(path_user_settings: str, date) -> list[dict]:
 def stock_information(path_user_settings: str) -> list[dict]:
     """Функция возвращает информацию по выбранным акциям"""
 
-    with open(path_user_settings, "r", encoding="utf-8") as file:
-        settings = json.load(file)
-        stock_data = settings["user_stocks"]
+    try:
+        with open(path_user_settings, "r", encoding="utf-8") as file:
+            settings = json.load(file)
+            stock_data = settings["user_stocks"]
 
-    stock_prices_list = []
-    url = 'https://financialmodelingprep.com/stable/quote'
-    load_dotenv("../.env")
-    API_KEY = os.getenv("API_KEY_STOCK")
-    headers = {"apikey": API_KEY}
+        stock_prices_list = []
+        url = 'https://financialmodelingprep.com/stable/quote'
+        load_dotenv("../.env")
+        API_KEY = os.getenv("API_KEY_STOCK")
+        headers = {"apikey": API_KEY}
 
-    for item in stock_data:
-        payload = {"symbol": item}
+        for item in stock_data:
+            payload = {"symbol": item}
 
-        response = requests.get(url, headers=headers, params=payload)
-        result = response.json()[0]["price"]
-        stock_data = {"stock": item, "price": result}
-        stock_prices_list.append(stock_data)
+            response = requests.get(url, headers=headers, params=payload)
+            result = response.json()[0]["price"]
+            stock_data = {"stock": item, "price": result}
+            stock_prices_list.append(stock_data)
 
-    return stock_prices_list
+        return stock_prices_list
+
+    except Exception as e:
+        print('Ошибка загрузки файла')
+        return []
 
 # print(stock_information('../user_settings.json'))
 

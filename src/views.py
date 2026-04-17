@@ -56,7 +56,7 @@ def main_page(date: str)-> dict:
 
 
 
-print(main_page('2021-05-02 07:11:11'))
+# print(main_page('2021-05-02 07:11:11'))
 
 
 
