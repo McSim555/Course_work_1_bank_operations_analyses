@@ -4,8 +4,7 @@ from typing import Optional
 import pandas as pd
 
 
-def spending_by_category(transactions: pd.DataFrame, category: str, date: Optional[str] = None) \
-        -> pd.DataFrame:
+def spending_by_category(transactions: pd.DataFrame, category: str, date: Optional[str] = None) -> pd.DataFrame:
     """Функция возвращает траты по заданной категории за последние три месяца от переданной даты.
     Формат даты YYYY-MM-DD"""
 

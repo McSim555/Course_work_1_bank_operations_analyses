@@ -1,13 +1,18 @@
 import json
 from collections import Counter
-
 from src.utils import data_from_excel
 
 
-def cashback_categories(paths_to_data: str, year: str, month: str) -> dict:
+def cashback_categories(paths_to_data: str, target_year: str, target_month: str) -> dict:
     """Функция выводит информацию о кэшбэке по категориям в JSON формате"""
 
-    data = data_from_excel(paths_to_data)
+    data_raw = data_from_excel(paths_to_data)
+    data = []
+    for item in data_raw:
+        if item["Дата платежа"] != "":
+            day, month, year = item["Дата платежа"].split(".")
+            if year == target_year and month == target_month:
+                data.append(item)
 
     categories_list = [operation["Категория"] for operation in data if "Категория" in operation]
 
@@ -27,4 +32,5 @@ def cashback_categories(paths_to_data: str, year: str, month: str) -> dict:
 
     return cashback
 
-# print(cashback_categories('../data/operations.xlsx', '2021', '04'))
+
+# print(cashback_categories('../data/operations.xlsx', '2021', '12'))
