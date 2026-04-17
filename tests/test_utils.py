@@ -1,6 +1,8 @@
 import json
 from unittest.mock import Mock, mock_open, patch
+
 import pytest
+
 from src.utils import cards_data, currency_rates, data_from_excel, greetings, sort_by_payment, stock_information
 
 

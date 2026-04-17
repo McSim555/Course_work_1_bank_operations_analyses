@@ -1,4 +1,5 @@
 from unittest.mock import mock_open, patch
+
 from src.services import cashback_categories
 
 

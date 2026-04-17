@@ -1,5 +1,6 @@
 import json
 import logging
+
 from src.utils import cards_data, currency_rates, data_from_excel, greetings, sort_by_payment, stock_information
 
 logging.basicConfig(

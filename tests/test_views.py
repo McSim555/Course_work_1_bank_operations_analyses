@@ -1,5 +1,7 @@
 from unittest.mock import mock_open, patch
+
 import pytest
+
 from src.views import main_page
 
 

@@ -41,8 +41,8 @@
 
    Функция ```spending_by_category``` принимает данные в виде DataFrame, категорию для отчета и опционально дату и 
    выводит сумму трат за последние 3 месяца по заданной категории. 
-   С помощью декораторов отчет записывается в папку ```reports```. 
-   My_decorator пишет в report.csv. My_decorator_with_param в файл report_new.csv
+   С помощью декораторов отчет записывается в папку ```json_outputs```. 
+   My_decorator пишет в spending_by_category.json. My_decorator_with_param в файл, имя которого является аргументом вызова декоратора
 
 
 12. Тестирование
@@ -53,13 +53,13 @@ Code coverage:
 Name              Stmts   Miss  Cover
 -------------------------------------
 src\__init__.py       0      0   100%
-src\reports.py       36      3    92%
-src\services.py      23      0   100%
+src\reports.py       50      4    92%
+src\services.py      34      3    91%
 src\utils.py         94      2    98%
 src\views.py         35      0   100%
 -------------------------------------
-TOTAL               188      5    97%
+TOTAL               213      9    96%
 
 
 13. Логирование
-Запись логов работы функции main_page модуля views.py осуществляется в папку logs в корне проекта
+Запись логов работы функций осуществляется в папку logs в корне проекта
