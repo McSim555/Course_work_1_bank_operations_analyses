@@ -1,19 +1,19 @@
-import pandas as pd
-import re
+import json
 import os
+import re
+import pandas as pd
 import requests
 from dotenv import load_dotenv
-import json
 
 
 def greetings(date_time: str) -> str:
-    """Функция для выбора приветствия """
+    """Функция для выбора приветствия"""
 
     try:
-        time_value = re.findall(r'\d{2}:\d{2}:\d{2}', date_time)
+        time_value = re.findall(r"\d{2}:\d{2}:\d{2}", date_time)
         time_str = time_value[0]
-    except Exception as e:
-        print('Время введено некорректно')
+    except Exception:
+        print("Время введено некорректно")
 
     if int(time_str[:2]) < 5:
         greeting = "Доброй ночи!"
@@ -27,7 +27,7 @@ def greetings(date_time: str) -> str:
     return greeting
 
 
-def data_from_excel(path_to_excel: str)-> list[dict]:
+def data_from_excel(path_to_excel: str) -> list[dict]:
     """Функция для считывания финансовых операций из Excel выдает список словарей с данными
     :rtype: list[dict]
     """
@@ -35,78 +35,106 @@ def data_from_excel(path_to_excel: str)-> list[dict]:
     try:
         excel_data = pd.read_excel(path_to_excel)
 
-        excel_data_filled = excel_data.fillna('')
+        excel_data_filled = excel_data.fillna("")
 
         excel_transactions_list = excel_data_filled.to_dict(orient="records")
 
         return excel_transactions_list
 
-    except Exception as e:
-        print('Файл не найден или ошибка чтения файла')
+    except Exception:
+        print("Файл не найден или ошибка чтения файла")
         return []
 
+
 # print(data_from_excel('../data/operations.xlsx'))
+
 
 def cards_data(excel_file: list[dict], date_time: str) -> list[dict]:
     """Функция для подготовки данных по картам в заданном формате"""
 
-    year = date_time.split('-')[0]
-    month = date_time.split('-')[1]
-    day = date_time.split('-')[2][:2]
+    year = date_time.split("-")[0]
+    month = date_time.split("-")[1]
+    day = date_time.split("-")[2][:2]
 
-    categories_no_cashback = ('Бонусы', 'Госуслуги', 'Другое', 'Зарплата', 'Наличные', 'НКО', 'Переводы', 'Пополнения',
-                              'Услуги банка', 'Финансы', '')
+    categories_no_cashback = (
+        "Бонусы",
+        "Госуслуги",
+        "Другое",
+        "Зарплата",
+        "Наличные",
+        "НКО",
+        "Переводы",
+        "Пополнения",
+        "Услуги банка",
+        "Финансы",
+        "",
+    )
     cards_list = []
 
     for operation in excel_file:
-        if (operation['Дата операции'][6:10] == year and
-                operation['Дата операции'][3:5] == month and
-                0 < int(operation['Дата операции'][:2]) <= int(day) and
-                operation['Номер карты'] != ''):
+        if (
+            operation["Дата операции"][6:10] == year
+            and operation["Дата операции"][3:5] == month
+            and 0 < int(operation["Дата операции"][:2]) <= int(day)
+            and operation["Номер карты"] != ""
+        ):
 
-            if operation['Категория'] in categories_no_cashback:
-                cash_back = 0
+            if operation["Категория"] in categories_no_cashback:
+                cash_back = 0.0
             else:
-                cash_back = (float(operation['Сумма операции']) * (-1)) // 100
+                cash_back = (float(operation["Сумма операции"]) * (-1)) // 100
 
-            single_operation = {"last_digits": operation['Номер карты'][1:], "total_spent": operation['Сумма операции'], "cashback": cash_back}
+            single_operation = {
+                "last_digits": operation["Номер карты"][1:],
+                "total_spent": operation["Сумма операции"],
+                "cashback": cash_back,
+            }
 
             cards_list.append(single_operation)
 
     return cards_list
+
 
 # date_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 # date_string = '2026-04-16 01:11:11'
 # print(cards_data(data_from_excel('../data/operations.xlsx'), date_string))
 
 
-def sort_by_payment(excel_file: list[dict], date_time) -> list[dict]:
+def sort_by_payment(excel_file: list[dict], date_time: str) -> list[dict]:
     """Функция определяет ТОП5 транзакций по сумме платежа"""
 
-    year = date_time.split('-')[0]
-    month = date_time.split('-')[1]
-    day = date_time.split('-')[2][:2]
+    year = date_time.split("-")[0]
+    month = date_time.split("-")[1]
+    day = date_time.split("-")[2][:2]
 
     excel_file_selected = []
 
     for operation in excel_file:
-        if (operation['Дата операции'][6:10] == year and
-                operation['Дата операции'][3:5] == month and
-                0 < int(operation['Дата операции'][:2]) <= int(day)):
+        if (
+            operation["Дата операции"][6:10] == year
+            and operation["Дата операции"][3:5] == month
+            and 0 < int(operation["Дата операции"][:2]) <= int(day)
+        ):
             excel_file_selected.append(operation)
 
-    sorted_set = sorted(excel_file_selected, key=lambda x: abs(x['Сумма платежа']), reverse=True)
+    sorted_set = sorted(excel_file_selected, key=lambda x: abs(x["Сумма платежа"]), reverse=True)
     top5 = sorted_set[:5]
     top5_selected = []
     for operation in top5:
-        selection = {"date": operation['Дата платежа'], "amount": operation['Сумма платежа'], "category": operation['Категория'], "description": operation['Описание']}
+        selection = {
+            "date": operation["Дата платежа"],
+            "amount": operation["Сумма платежа"],
+            "category": operation["Категория"],
+            "description": operation["Описание"],
+        }
         top5_selected.append(selection)
     return top5_selected
+
 
 # print(sort_by_payment(data_from_excel('../data/operations.xlsx'), date_string))
 
 
-def currency_rates(path_user_settings: str, date) -> list[dict]:
+def currency_rates(path_user_settings: str, date: str) -> list[dict]:
     """Функция получает курс валют на заданную дату"""
 
     with open(path_user_settings, "r", encoding="utf-8") as file:
@@ -142,7 +170,7 @@ def stock_information(path_user_settings: str) -> list[dict]:
             stock_data = settings["user_stocks"]
 
         stock_prices_list = []
-        url = 'https://financialmodelingprep.com/stable/quote'
+        url = "https://financialmodelingprep.com/stable/quote"
         load_dotenv("../.env")
         API_KEY = os.getenv("API_KEY_STOCK")
         headers = {"apikey": API_KEY}
@@ -158,9 +186,8 @@ def stock_information(path_user_settings: str) -> list[dict]:
         return stock_prices_list
 
     except Exception as e:
-        print('Ошибка загрузки файла')
+        print(f"Ошибка загрузки файла: {e}")
         return []
 
+
 # print(stock_information('../user_settings.json'))
-
-

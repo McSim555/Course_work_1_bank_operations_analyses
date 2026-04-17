@@ -97,33 +97,33 @@
     "currency_rates": [
         {
             "currency": "USD",
-            "rate": 75.684666
+            "rate": 75.995221
         },
         {
             "currency": "EUR",
-            "rate": 89.550674
+            "rate": 89.677299
         }
     ],
     "stock_prices": [
         {
             "stock": "AAPL",
-            "price": 263.4
+            "price": 271.35
         },
         {
             "stock": "AMZN",
-            "price": 249.7
+            "price": 253.67999
         },
         {
             "stock": "GOOGL",
-            "price": 336.02
+            "price": 338.87
         },
         {
             "stock": "MSFT",
-            "price": 420.26
+            "price": 428.154
         },
         {
             "stock": "TSLA",
-            "price": 388.9
+            "price": 405.79999
         }
     ]
 }

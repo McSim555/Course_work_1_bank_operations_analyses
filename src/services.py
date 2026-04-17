@@ -1,6 +1,7 @@
-from utils import data_from_excel
 import json
 from collections import Counter
+
+from src.utils import data_from_excel
 
 
 def cashback_categories(paths_to_data: str, year: str, month: str) -> dict:
@@ -17,23 +18,13 @@ def cashback_categories(paths_to_data: str, year: str, month: str) -> dict:
 
     for key in operations_count.keys():
         for item in data:
-            if key in item['Категория']:
-                if item['Кэшбэк'] != '':
-                    cashback[key] = cashback[key] + int(item['Кэшбэк'])
+            if key in item["Категория"]:
+                if item["Кэшбэк"] != "":
+                    cashback[key] = cashback[key] + int(item["Кэшбэк"])
 
-    with open('../data/json_outputs/cashback_by_categories.json', 'w', encoding='utf-8') as f:
+    with open("../data/json_outputs/cashback_by_categories.json", "w", encoding="utf-8") as f:
         json.dump(cashback, f, ensure_ascii=False, indent=4)
 
     return cashback
 
-print(cashback_categories('../data/operations.xlsx', '2021', '04'))
-
-    # for operation in data:
-    #     if operation['Дата операции'][6:10] == year and operation['Дата операции'][3:5] == month:
-
-
-    # {
-    #     "Категория 1": 1000,
-    #     "Категория 2": 2000,
-    #     "Категория 3": 500
-    # }
+# print(cashback_categories('../data/operations.xlsx', '2021', '04'))
